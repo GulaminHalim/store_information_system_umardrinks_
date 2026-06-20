@@ -73,7 +73,7 @@ export default function Inventory() {
 
   return (
     <div style={{ padding: "20px" }}>
-      <h1>Halaman Inventory</h1>
+      <h1>Inventory</h1>
 
       <div style={{ overflowX: "auto", marginTop: "20px" }}>
         <table

@@ -30,7 +30,7 @@ export default function Inventory() {
       }
     });
     // stok awal FIX
-    const openingStock = 53;
+    const openingStock = 25;
 
     const reject = 0;
     const mealAllowance = 0;

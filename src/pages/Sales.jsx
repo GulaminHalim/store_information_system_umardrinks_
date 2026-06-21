@@ -206,7 +206,7 @@ export default function Sales() {
 
   return (
     <div style={{ padding: "20px" }}>
-      <h1>Weekly Sales Overview</h1>
+      <h1>WEEKLY SALES OVERVIEW</h1>
 
       <div className="sales-layout">
         {/* 📊 CHART */}

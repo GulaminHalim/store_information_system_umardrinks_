@@ -30,6 +30,9 @@ export default function Sales() {
     bestProduct: "-",
     productSales: {},
   });
+  const [selectedDate, setSelectedDate] = useState(
+    new Date().toISOString().split("T")[0],
+  );
 
   const endToday = new Date();
   endToday.setHours(23, 59, 59, 999);
@@ -121,14 +124,16 @@ export default function Sales() {
         ],
       });
 
-      // 🔥 Hitung hari ini
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      // 🔥 Filter berdasarkan tanggal dipilih
+      const selected = new Date(selectedDate);
+      selected.setHours(0, 0, 0, 0);
+
+      const endSelected = new Date(selected);
+      endSelected.setHours(23, 59, 59, 999);
 
       let todaySales = 0;
       let totalTransactions = 0;
 
-      // 🔥 Untuk produk terlaris
       const productMap = {};
 
       querySnapshot.forEach((doc) => {
@@ -138,24 +143,24 @@ export default function Sales() {
           ? new Date(data.createdAt.seconds * 1000)
           : new Date(data.createdAt);
 
-        // ✅ Total hari ini
-        if (dateObj >= today && dateObj <= endToday) {
+        if (dateObj >= selected && dateObj <= endSelected) {
           todaySales += Number(data.totalPrice) || 0;
-          totalTransactions += 1; // ✅ hitung hanya hari ini
+
+          totalTransactions += 1;
 
           if (data.items) {
             data.items.forEach((item) => {
               const name = item.name;
               const qty = item.qty || 1;
 
-              if (!productMap[name]) productMap[name] = 0;
+              if (!productMap[name]) {
+                productMap[name] = 0;
+              }
+
               productMap[name] += qty;
             });
           }
         }
-
-        // ✅ Produk terlaris (asumsi ada items array)
-        // ✅ HANYA HITUNG PRODUK HARI INI
       });
 
       // 🔥 Cari produk terlaris
@@ -169,7 +174,6 @@ export default function Sales() {
         }
       }
 
-      // 🔥 Set summary
       setSummary({
         todaySales,
         totalTransactions,
@@ -179,7 +183,7 @@ export default function Sales() {
     };
 
     fetchData();
-  }, []);
+  }, [selectedDate]);
 
   const options = {
     responsive: true,
@@ -237,6 +241,29 @@ export default function Sales() {
             boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
           }}
         >
+          <div style={{ marginBottom: "15px" }}>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "5px",
+                fontWeight: "bold",
+              }}
+            >
+              Filter Tanggal
+            </label>
+
+            <input
+              type="date"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "10px",
+                borderRadius: "8px",
+                border: "1px solid #ccc",
+              }}
+            />
+          </div>
           <h3 style={{ display: "flex", justifyContent: "space-between" }}>
             <span>Daily report</span>
             <span style={{ fontSize: "14px", color: "gray" }}>{todayDate}</span>

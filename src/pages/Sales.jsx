@@ -183,6 +183,7 @@ export default function Sales() {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       title: {
         display: true,
@@ -214,6 +215,7 @@ export default function Sales() {
           style={{
             flex: 2,
             width: "100%",
+            height: window.innerWidth <= 768 ? "400px" : "500px",
           }}
         >
           {chartData ? (

@@ -8,7 +8,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Form from "react-bootstrap/Form";
 import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/Button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Trash2 } from "lucide-react";
 import Receipt from "../components/Receipt";
 import Eodreport from "./Eodreport";
 
@@ -16,6 +16,7 @@ import {
   collection,
   onSnapshot,
   updateDoc,
+  deleteDoc,
   doc,
   query,
   orderBy,
@@ -87,6 +88,20 @@ export default function Transactions() {
     });
   };
 
+  const handleDeleteOrder = async (orderId) => {
+    const confirmDelete = window.confirm(
+      "Yakin ingin menghapus transaksi ini?",
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      await deleteDoc(doc(db, "orders", orderId));
+    } catch (error) {
+      console.error("Gagal menghapus transaksi:", error);
+    }
+  };
+
   const formatDateTime = (timestamp) => {
     if (!timestamp) return "-";
 
@@ -156,6 +171,24 @@ export default function Transactions() {
                       Print
                     </Button>
                   )}
+
+                  {/* BUTTON DELETE */}
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={() => handleDeleteOrder(order.id)}
+                    style={{
+                      borderRadius: "50%",
+                      width: "38px",
+                      height: "38px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: 0,
+                    }}
+                  >
+                    <Trash2 size={18} />
+                  </Button>
                 </div>
               </div>
 
